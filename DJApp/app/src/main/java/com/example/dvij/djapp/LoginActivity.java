@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,11 +30,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
-
+import android.content.Intent;
 /**
  * A login screen that offers login via email/password.
  */
@@ -83,12 +88,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        if (mEmailSignInButton != null) {
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin();
+                }
+            });
+        }
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -144,6 +151,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+
+        Log.v("","clicked");
         if (mAuthTask != null) {
             return;
         }
@@ -155,6 +164,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        Log.v("email",email);
+        Log.v("pass",password);
 
         boolean cancel = false;
         View focusView = null;
@@ -180,24 +191,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
+            Log.v("","cancelled");
             focusView.requestFocus();
         } else {
+            Log.v("","not cancelled");
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+
+
+
         }
     }
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.contains("d");
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 0;
     }
 
     /**
@@ -302,29 +318,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+          try
+            {
+                
+                // Creatin the connection
+                URL url = new URL("http://www.dev.applications.ene.gov.on.ca/jay/DJ/auth.php");
+                URLConnection conn = url.openConnection();
+                //conn.setDoOutput(false);
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                conn.setRequestProperty(
+                        "Authorization", mEmail+":"+mPassword);
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                Log.v("", mEmail);
+                Log.v("",mPassword);
+                //Log.v("", _is.toString());
+                // Get the response
+                //BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                Log.v("","BEFORE getting input");
+
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                //readin d response till d end
+                Log.v("","after getting input");
+                String line;
+
+                Log.v("","before while loop");
+                line = rd.readLine();
+
+                rd.close();
+                Log.v("",line);
+                if (line.equals("True")){
+                    Log.v("","line is true");
+                    return true;
+
                 }
+                Log.v("","after background");
             }
+
+            catch (Exception e) {return false;}
 
             // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
@@ -333,6 +373,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
+                startActivity(intent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -345,6 +387,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public void LoginUser(){
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    public void registerUser(View view){
+        //go to registration page
+        Log.v("",view.toString());
+        Intent intent = new Intent(this, RegisterUserActivity.class);
+        startActivity(intent);
     }
 }
 
