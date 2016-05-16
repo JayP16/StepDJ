@@ -3,6 +3,7 @@ package com.example.dvij.djapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onClick(View view) {
                     attemptLogin();
+                    loginUser(findViewById(R.id.email_sign_in_button));
                 }
             });
         }
@@ -314,10 +316,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        //View mLoginFormView;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+            //this.mLoginFormView = mLoginFormView;
 
         }
 
@@ -345,10 +349,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 //readin d response till d end
-                Log.v("","after getting input");
                 String line;
-
-                Log.v("","before while loop");
                 line = rd.readLine();
 
                 rd.close();
@@ -373,8 +374,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(LoginActivity.this, homePageActivity.class));
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -389,14 +389,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    public void LoginUser(){
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
+    public void loginUser(View view){
+
     }
 
     public void registerUser(View view){
         //go to registration page
-        Log.v("",view.toString());
         Intent intent = new Intent(this, RegisterUserActivity.class);
         startActivity(intent);
     }

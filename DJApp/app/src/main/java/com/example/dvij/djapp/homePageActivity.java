@@ -1,15 +1,13 @@
 package com.example.dvij.djapp;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-/**
- * Created by Dvij on 2016-05-01.
- */
-public class SignInActivity extends AppCompatActivity {
+public class homePageActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homepage);
+        setContentView(R.layout.activity_home_page);
     }
 }
