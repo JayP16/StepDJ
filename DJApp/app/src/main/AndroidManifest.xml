@@ -24,7 +24,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterUserActivity" />
-        <activity android:name=".homePageActivity"></activity>
+        <activity android:name=".homePageActivity" />
+        <activity
+            android:name=".Friend_vids_Activity"
+            android:label="@string/title_activity_friend_vids_"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".StartUpActivity"></activity>
     </application>
 
 </manifest>

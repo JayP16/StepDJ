@@ -332,7 +332,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             {
                 
                 // Creatin the connection
-                URL url = new URL("http://www.dev.applications.ene.gov.on.ca/jay/DJ/auth.php");
+                //URL url = new URL("http://www.dev.applications.ene.gov.on.ca/jay/DJ/auth.php");
+                URL url = new URL("http://ec2-52-40-65-165.us-west-2.compute.amazonaws.com/authentication/auth.php");
                 URLConnection conn = url.openConnection();
                 //conn.setDoOutput(false);
 
@@ -374,7 +375,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                startActivity(new Intent(LoginActivity.this, homePageActivity.class));
+                startActivity(new Intent(LoginActivity.this, StartUpActivity.class));
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
